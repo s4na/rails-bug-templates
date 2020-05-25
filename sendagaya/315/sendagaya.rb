@@ -39,6 +39,10 @@ class Post < ActiveRecord::Base
   def one_comment_v2
     comments.find { |x| x.id == 1 }
   end
+
+  def one_comment_v3
+    comments.index_by(&:id)[1]
+  end
 end
 
 class Comment < ActiveRecord::Base
@@ -65,5 +69,8 @@ class BugTest < Minitest::Test
     # 解法
     # p '=' * 20
     # p posts.first.one_comment_v2
+
+    # p '=' * 20
+    # p posts.first.one_comment_v3
   end
 end
