@@ -32,9 +32,9 @@ end
 class Post < ActiveRecord::Base
   has_many :comments
 
-  scope :first_comment, -> {
-    find_by(id: 1)
-  }
+  def one_comment
+    comments.find_by(id: 1)
+  end
 end
 
 class Comment < ActiveRecord::Base
@@ -42,22 +42,20 @@ class Comment < ActiveRecord::Base
 end
 
 class BugTest < Minitest::Test
-  def test_association_stuff
+  def setup
+    # ActiveRecord::Base.logger = Logger.new(STDOUT)
+
     post = Post.create!
     post.comments << Comment.create!
+  end
 
-    # p 'hoge'
-    # p Post.first
-    p Post.includes(:comments)
+  def test_association_stuff
+    posts = Post.includes(:comments)
 
-    p Post.first_comment
+    p posts.first.comments
 
-    pp Post.create!.source_location
-
-    # pp Post.where.not(ids: Comment.where.not(post_idLnil))
-
-    # assert_equal 1, post.comments.count
-    # assert_equal 1, Comment.count
-    # assert_equal post.id, Comment.first.post.id
+    # ここでsqlが走って欲しくなかった
+    p '=' * 20
+    p posts.first.one_comment
   end
 end
