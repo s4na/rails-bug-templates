@@ -35,6 +35,10 @@ class Post < ActiveRecord::Base
   def one_comment
     comments.find_by(id: 1)
   end
+
+  def one_comment_v2
+    comments.find { |x| x.id == 1 }
+  end
 end
 
 class Comment < ActiveRecord::Base
@@ -57,5 +61,9 @@ class BugTest < Minitest::Test
     # ここでsqlが走って欲しくなかった
     p '=' * 20
     p posts.first.one_comment
+
+    # 解法
+    # p '=' * 20
+    # p posts.first.one_comment_v2
   end
 end
